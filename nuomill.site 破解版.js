@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         nuomill.site 破解版
 // @namespace    https://github.com/haolinawa
-// @version      1.0
+// @version      1.1
 // @description  你说得对，这是nuomill.site 破解版
 // @author       haolinAWA
 // @match        https://nuomill.site/*
