@@ -2,7 +2,7 @@
 // @name         nuomill.site 破解版
 // @namespace    https://github.com/haolinawa
 // @version      1.5
-// @description  你说得对，这是nuomill.site 破解版 - 多位置动态获取用户名，只改自己的等级为 Lv6
+// @description  你说得对，这是nuomill.site 破解版
 // @author       haolinAWA
 // @match        https://nuomill.site/*
 // @grant        none
