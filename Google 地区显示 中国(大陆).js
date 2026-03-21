@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Google 地区显示 中国(大陆)
-// @namespace    https://github.com/haolinawa
+// @namespace    https://greasyfork.org/users/xxx
 // @version      1.3
 // @description  把 Google 首页/搜索页的地区显示改为中国(大陆)
 // @author       haolinAWA
@@ -9,6 +9,8 @@
 // @grant        none
 // @run-at       document-end
 // @license MIT
+// @downloadURL https://update.greasyfork.org/scripts/569184/Google%20%E5%9C%B0%E5%8C%BA%E6%98%BE%E7%A4%BA%20%E4%B8%AD%E5%9B%BD%28%E5%A4%A7%E9%99%86%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/569184/Google%20%E5%9C%B0%E5%8C%BA%E6%98%BE%E7%A4%BA%20%E4%B8%AD%E5%9B%BD%28%E5%A4%A7%E9%99%86%29.meta.js
 // ==/UserScript==
 
 (function () {
@@ -25,7 +27,7 @@
         };
     }
 
-    // 核心替换逻辑
+    // 核心替换逻辑（只处理文本节点，且尽量早返回）
     function replaceInNode(node) {
         if (node.nodeType !== Node.TEXT_NODE) return;
         let text = node.textContent;
@@ -33,17 +35,17 @@
 
         let changed = false;
 
-        // 情况1：搜索页的位置提示
+        // 情况1：搜索页的位置提示（最常见）
         if (text.includes('是根据您的 IP 地址推断出来的') ||
             text.includes('·') && text.includes('- 新位置信息')) {
-            text = text.替换(
+            text = text.replace(
                 /^([^·\n]+?)\s*·\s*([^·\n]+?)\s*-\s*是根据您的 IP 地址推断出来的\s*-\s*新位置信息/,
                 `${TARGET_TEXT} · ${TARGET_TEXT} - 是根据您的 IP 地址推断出来的 - 新位置信息`
             );
             changed = true;
         }
 
-        // 首页左下角单独的地区名
+        // 情况2：首页左下角单独的地区名（香港/台湾/新加坡等）
         else if (/^(香港|台湾|新加坡|日本|韩国|美国)$/i.test(text.trim())) {
             text = TARGET_TEXT;
             changed = true;
@@ -69,9 +71,9 @@
         }
     }
 
-    // 初始执行
+    // 初始执行 - 只扫描可能出现目标的区域
     function initialReplace() {
-        // 优先尝试常见的容器
+        // 优先尝试常见的容器（性能更好）
         const selectors = [
             '#fbar',                    // 首页底部
             'footer',                   // 通用底部
@@ -92,12 +94,12 @@
         processContainer(container || document.body);
     }, 400);
 
-    // 观察器
+    // 观察器 - 只观察 body 和几个关键父元素
     const observer = new MutationObserver((mutations) => {
         let hasRelevantChange = false;
 
         for (const mut of mutations) {
-            if (mut。type === 'childList' && mut.addedNodes.length > 0) {
+            if (mut.type === 'childList' && mut.addedNodes.length > 0) {
                 hasRelevantChange = true;
                 break;
             }
@@ -120,7 +122,7 @@
         subtree: true
     });
 
-    // 初次替换
+    // 初次替换（等 DOM 基本稳定）
     if (document.body) {
         initialReplace();
     } else {
