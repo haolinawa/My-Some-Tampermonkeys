@@ -2,7 +2,7 @@
 // @name         nuomill.site 破解版
 // @namespace    https://github.com/haolinawa
 // @version      1.0
-// @description  你说得对，这是uomill.site 破解版
+// @description  你说得对，这是nuomill.site 破解版
 // @author       haolinAWA
 // @match        https://nuomill.site/*
 // @grant        none
