@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name         nuomill.site 破解版
 // @namespace    https://github.com/haolinawa
-// @version      1.1
-// @description  你说得对，这是nuomill.site 破解版
+// @version      1.5
+// @description  你说得对，这是nuomill.site 破解版 - 多位置动态获取用户名，只改自己的等级为 Lv6
 // @author       haolinAWA
 // @match        https://nuomill.site/*
 // @grant        none
 // @run-at       document-start
-// @license MIT
+// @license      MIT
 // ==/UserScript==
 
 (function() {
@@ -18,26 +18,77 @@
     const EXP_TEXT = "1,000,000+ EXP";
     const CURRENT_TEXT = "当前等级";
 
+    let myUsername = null; // 缓存用户名
+
     let isProcessing = false;
     let lastLevelsRun = 0;
 
-    // only通用修改
+    // 多位置尝试获取用户名
+    function tryGetMyUsername() {
+        if (myUsername) return true;
+
+        let candidate = null;
+
+        // 优先：如果在 /profile 页面，取 h2 或 p.profile-username
+        if (location.pathname === '/profile' || location.pathname.startsWith('/profile/')) {
+            // h2 显示名
+            const h2 = document.querySelector('.profile-info h2');
+            if (h2) candidate = h2.textContent.trim();
+
+            // @用户名
+            if (!candidate) {
+                const usernameP = document.querySelector('p.profile-username');
+                if (usernameP) candidate = usernameP.textContent.trim().replace(/^@/, ''); // 去掉 @
+            }
+        }
+
+        // 通用位置nickname span
+        if (!candidate) {
+            const nicknameSpan = document.querySelector('a.nickname span');
+            if (nicknameSpan) candidate = nicknameSpan.textContent.trim();
+        }
+
+        // popover内的nickname
+        if (!candidate) {
+            const popoverNickname = document.querySelector('div.v-popover a.nickname span');
+            if (popoverNickname) candidate = popoverNickname.textContent.trim();
+        }
+
+        // 任何含nickname或username的文本元素
+        if (!candidate) {
+            const possible = document.querySelectorAll('[class*="nickname"], [class*="username"], h2, .profile-username');
+            for (let el of possible) {
+                const txt = el.textContent.trim();
+                if (txt && txt.length > 1 && !txt.startsWith('@')) { // 避免取 @ 开头的作为显示名
+                    candidate = txt;
+                    break;
+                }
+            }
+        }
+
+        if (candidate && candidate.length > 1) {
+            myUsername = candidate;
+            console.log('咱知道你的用户名了，你叫：' + myUsername + '对吧？');
+            return true;
+        }
+
+        return false;
+    }
+
+    // 一些通用修改
     function applyGlobalChanges() {
-        // level-badge
         document.querySelectorAll('span.level-badge').forEach(el => {
             if (el.textContent.trim() !== TARGET_LEVEL) {
                 el.textContent = TARGET_LEVEL;
             }
         });
 
-        // 等级进度条变成100%
         document.querySelectorAll('div.exp-bar div.exp-fill').forEach(el => {
             if (el.style.width !== '100%') {
                 el.style.cssText = 'width: 100% !important; transition: none !important;';
             }
         });
 
-        // exp-text
         document.querySelectorAll('span.exp-text').forEach(el => {
             if (el.textContent.trim() !== EXP_TEXT) {
                 el.textContent = EXP_TEXT;
@@ -45,7 +96,7 @@
         });
     }
 
-    // 强制把当前等级放到Lv6
+    // levels页面强制Lv6当前
     function fixLevelsCurrent() {
         if (!location.pathname.includes('/levels')) return;
 
@@ -53,15 +104,9 @@
         if (now - lastLevelsRun < 280) return;
         lastLevelsRun = now;
 
-        // 先全局移除所有当前等级（清掉网站原生的和之前脚本加的）
         document.querySelectorAll('div.level-current').forEach(el => el.remove());
+        document.querySelectorAll('div.level-card.active').forEach(card => card.classList.remove('active'));
 
-        // 移除所有active
-        document.querySelectorAll('div.level-card.active').forEach(card => {
-            card.classList.remove('active');
-        });
-
-        // 找到Lv6卡片
         let targetCard = null;
         document.querySelectorAll('div.level-card').forEach(card => {
             const nameEl = card.querySelector('span.level-name');
@@ -70,11 +115,8 @@
             }
         });
 
-        // 如果找到就加active还有插入当前等级
         if (targetCard) {
             targetCard.classList.add('active');
-
-            // 确认没重复才插入cwc
             if (!targetCard.querySelector('div.level-current')) {
                 const expDiv = targetCard.querySelector('div.level-exp');
                 if (expDiv) {
@@ -88,49 +130,63 @@
         }
     }
 
-    // 主循环函数
+    // 只改自己的评论等级
+    function fixMyCommentLevel() {
+        tryGetMyUsername(); // 每次尝试刷新用户名
+        if (!myUsername) return;
+
+        document.querySelectorAll('div.comment-author-row span.comment-author').forEach(author => {
+            const displayed = author.textContent.trim();
+            if (displayed === myUsername || displayed.toLowerCase() === myUsername.toLowerCase()) {
+                const level = author.nextElementSibling; // 通常下一个 sibling 就是 comment-level
+                if (level && level.classList.contains('comment-level')) {
+                    if (level.textContent.trim() !== TARGET_LEVEL) {
+                        level.textContent = TARGET_LEVEL;
+                    }
+                }
+            }
+        });
+    }
+
+    // 主循环
     function mainLoop() {
         if (isProcessing) return;
         isProcessing = true;
         try {
             applyGlobalChanges();
             fixLevelsCurrent();
+            fixMyCommentLevel();
         } finally {
             isProcessing = false;
         }
     }
 
-    // 极早执行
-    function tryEarlyRun() {
-        if (document.body) {
-            mainLoop();
-        } else {
-            setTimeout(tryEarlyRun, 30);
-        }
+    // 启动！
+    function earlyTry() {
+        tryGetMyUsername();
+        if (document.body) mainLoop();
+        else setTimeout(earlyTry, 30);
     }
-    tryEarlyRun();
+    earlyTry();
 
-    // DOMContentLoaded再run一次
-    document.addEventListener('DOMContentLoaded', mainLoop, { once: true });
+    document.addEventListener('DOMContentLoaded', () => {
+        tryGetMyUsername();
+        mainLoop();
+    }, { once: true });
 
-    // 专门为levels页的快速修复定时器（只在levels路径下有效捏）
-    const levelsInterval = setInterval(() => {
-        if (location.pathname.includes('/levels')) {
-            fixLevelsCurrent();
-        }
+    // levels定时
+    const levelsTimer = setInterval(() => {
+        if (location.pathname.includes('/levels')) fixLevelsCurrent();
     }, 300);
 
-    // 通用变化监听
-    const observer = new MutationObserver(mutations => {
-        const hasRelevantChange = mutations.some(m =>
-            m.type === 'childList' ||
-            (m.type === 'attributes' && (m.attributeName === 'class' || m.attributeName === 'style'))
-        );
-        if (hasRelevantChange) {
-            mainLoop();
-        }
-    });
+    // 用户名加评论等级的定时
+    setInterval(() => {
+        tryGetMyUsername();
+        fixMyCommentLevel();
+    }, 500);
 
+    // observer监听所有变化
+    const observer = new MutationObserver(mainLoop);
     observer.observe(document.documentElement, {
         childList: true,
         subtree: true,
@@ -138,11 +194,7 @@
         attributeFilter: ['class', 'style']
     });
 
-    // 兜底
     setInterval(mainLoop, 2000);
 
-    // 清理定时器（防内存泄漏）
-    window.addEventListener('beforeunload', () => {
-        clearInterval(levelsInterval);
-    });
+    window.addEventListener('beforeunload', () => clearInterval(levelsTimer));
 })();
