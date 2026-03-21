@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Google 地区显示 中国(大陆)
-// @namespace    https://greasyfork.org/users/xxx
-// @version      1.3
+// @namespace    https://github.com/haolinawa
+// @version      1.4
 // @description  把 Google 首页/搜索页的地区显示改为中国(大陆)
 // @author       haolinAWA
 // @match           https://www.google.com.hk/*
