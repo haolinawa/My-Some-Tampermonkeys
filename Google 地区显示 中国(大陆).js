@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Google 地区显示 中国(大陆)
-// @namespace    https://greasyfork.org/users/xxx
-// @version      1.3
+// @namespace    https://github.com/haolinawa
+// @version      1.4
 // @description  把 Google 首页/搜索页的地区显示改为中国(大陆)
 // @author       haolinAWA
 // @match           https://www.google.com.hk/*
@@ -9,9 +9,6 @@
 // @grant        none
 // @run-at       document-end
 // @license MIT
-// @downloadURL https://update.greasyfork.org/scripts/569184/Google%20%E5%9C%B0%E5%8C%BA%E6%98%BE%E7%A4%BA%20%E4%B8%AD%E5%9B%BD%28%E5%A4%A7%E9%99%86%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/569184/Google%20%E5%9C%B0%E5%8C%BA%E6%98%BE%E7%A4%BA%20%E4%B8%AD%E5%9B%BD%28%E5%A4%A7%E9%99%86%29.meta.js
-// ==/UserScript==
 
 (function () {
     'use strict';
