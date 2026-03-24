@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         www.nuomill.com 破解版（糯米洛洛）1.1
+// @name         www.nuomill.com 破解版（糯米洛洛）
 // @namespace    https://github.com/haolinawa
 // @version      1.1
 // @description  你说得对，这是糯米洛洛网站的破解版 只不过换域名了cwc | 修复一些小小的bug
