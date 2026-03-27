@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         www.nuomill.com 破解版（糯米洛洛）
+// @name         nuomill.com 破解版（糯米洛洛）
 // @namespace    https://github.com/haolinawa
-// @version      3
+// @version      4
 // @description  你说得对，这是糯米洛洛网站的破解版 只不过换域名了cwc \n | 3.24修复一些小小的bug \n | 3.27 wcnm 怎么又没www前缀了 又要改下了
 // @author       haolinAWA
 // @match        https://www.nuomill.com/*
@@ -86,7 +86,7 @@
                 labelText.includes('共同体') ||
                 labelText.includes('代表') ||
                 labelText === '我是等级名称' ||
-                valueEl.textContent.trim().includes('Lv') // 如果数值本身带 Lv 也单作等级卡
+                valueEl。textContent.trim().includes('Lv') // 如果数值本身带 Lv 也单作等级卡
             ) {
                 valueEl.textContent = "Lv6";
                 labelEl.textContent = "共同体代表";
