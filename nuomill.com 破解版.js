@@ -2,9 +2,10 @@
 // @name         www.nuomill.com 破解版（糯米洛洛）
 // @namespace    https://github.com/haolinawa
 // @version      2
-// @description  你说得对，这是糯米洛洛网站的破解版 只不过换域名了cwc | 修复一些小小的bug
+// @description  你说得对，这是糯米洛洛网站的破解版 只不过换域名了cwc \n | 3.24修复一些小小的bug \n | 3.27 wcnm 怎么又没www前缀了 又要改下了
 // @author       haolinAWA
 // @match        https://www.nuomill.com/*
+// @match        https://nuomill.com/*
 // @grant        none
 // @run-at       document-start
 // @license      MIT
