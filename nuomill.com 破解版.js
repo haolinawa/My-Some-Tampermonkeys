@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         nuomill.com 破解版（糯米洛洛）
 // @namespace    https://github.com/haolinawa
-// @version      3.3
-// @description  你说得对，这是糯米洛洛网站的破解版 只不过换域名了cwc \n | 3.24修复一些小小的bug \n | 3.27 怎么又没www前缀了 又要改下了
+// @version      3.4
+// @description  你说得对，这是糯米洛洛网站的破解版 只不过换域名了cwc | 3.24修复一些小小的bug | 3.27 怎么又没www前缀了 又要改下了 | 看了一下别的管理员 发现EXP是没有逗号的 所以改下
 // @author       haolinAWA
 // @match        https://www.nuomill.com/*
 // @match        https://nuomill.com/*
@@ -16,7 +16,7 @@
 
     const TARGET_LEVEL = "Lv6 共同体代表";
     const TARGET_LEVEL_NAME = "共同体代表";
-    const EXP_TEXT = "1,000,000+ EXP";
+    const EXP_TEXT = "1000000+ EXP";
     const CURRENT_TEXT = "当前等级";
 
     let myUsername = null;
