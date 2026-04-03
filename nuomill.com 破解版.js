@@ -1,11 +1,13 @@
 // ==UserScript==
 // @name         nuomill.com 破解版（糯米洛洛）
 // @namespace    https://github.com/haolinawa
-// @version      3.4
-// @description  你说得对，这是糯米洛洛网站的破解版 只不过换域名了cwc | 3.24修复一些小小的bug | 3.27 怎么又没www前缀了 又要改下了 | 看了一下别的管理员 发现EXP是没有逗号的 所以改下
+// @version      3.5
+// @description  你说得对，这是糯米洛洛网站的破解版 只不过换域名了cwc | 3.24修复一些小小的bug | 3.27 怎么又没www前缀了 又要改下了 | 看了一下别的管理员 发现EXP是没有逗号的 所以改下 | 中央C这个家伙不知道什么时候又把nuomill.site不再重定向了 所以添加下域名
 // @author       haolinAWA
 // @match        https://www.nuomill.com/*
 // @match        https://nuomill.com/*
+// @match        https://www.nuomill.site/*
+// @match        https://nuomill.site/*
 // @grant        none
 // @run-at       document-start
 // @license      MIT
