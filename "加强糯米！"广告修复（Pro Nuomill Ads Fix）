@@ -2,7 +2,7 @@
 // @name         "加强糯米！"广告修复（Pro Nuomill Ads Fix）
 // @namespace    https://github.com/haolinawa
 // @version      1.0
-// @description  你说得对，这是"加强糯米！"中的DLC内容 修复了添加脚本后无法显示本站广告内容
+// @description  你说得对，这是"加强糯米！"中的DLC内容 修复了添加脚本后无法显示本站广告内容 本脚本由豆沙包AI生成，请仔细辨别。
 // @author       haolinAWA
 // @match        https://www.nuomill.com/*
 // @match        https://nuomill.com/*
@@ -20,7 +20,7 @@
     const AD_ALT   = 'https://cloud.touhou.re';
     const AD_URL   = 'https://cloud.touhou.re';
     const AD_TITLE = '找东方project同人游戏就上车万云！';
-    const AD_PROB  = 0.3; // 30%
+    const AD_PROB  = 0.3; // 30概率 取整数 要改请把概率转为整数awa
 
     // 目标 img 选择器
     const SELECTOR = 'img[data-v-7c6acc15]';
