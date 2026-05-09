@@ -1,0 +1,146 @@
+// ==UserScript==
+// @name         "加强糯米！"广告修复（Pro Nuomill Ads Fix）
+// @namespace    https://github.com/haolinawa
+// @version      1.0
+// @description  你说得对，这是"加强糯米！"中的DLC内容 修复了添加脚本后无法显示本站广告内容
+// @author       haolinAWA
+// @match        https://www.nuomill.com/*
+// @match        https://nuomill.com/*
+// @match        https://www.nuomill.site/*
+// @match        https://nuomill.site/*
+// @grant        none
+// @run-at       document-start
+// @license      MIT
+// ==/UserScript==
+
+(function () {
+    'use strict';
+
+    const AD_SRC   = 'https://file.nuomill.com/uploads/banners/1774754024_08924dbc6ce53e71.png';
+    const AD_ALT   = 'https://cloud.touhou.re';
+    const AD_URL   = 'https://cloud.touhou.re';
+    const AD_TITLE = '找东方project同人游戏就上车万云！';
+    const AD_PROB  = 0.3; // 30%
+
+    // 目标 img 选择器
+    const SELECTOR = 'img[data-v-7c6acc15]';
+
+    // 修复把视频广告为ads
+    function injectAd(img) {
+        // 标记
+        if (img.dataset.adInjected) return;
+        img.dataset.adInjected = 'true';
+
+        // 有这30概率触发
+        if (Math.random() > AD_PROB) return;
+
+        const card = img.closest('.video-card__wrap');
+        if (card) {
+            // 改文字 然后直接跳转
+            const titleA = card.querySelector('.video-card__info--tit a');
+            if (titleA) {
+                titleA.textContent = AD_TITLE;
+                titleA.href        = AD_URL;
+                titleA.removeAttribute('target');
+                titleA.removeAttribute('rel');
+            }
+
+            // 把观看和点赞改为很多的baka
+            const statTexts = card.querySelectorAll('.video-card__stats--left .video-card__stats--text');
+            statTexts.forEach(el => { el.textContent = '99999+'; });
+
+            // 视频时长更改
+            const durationEl = card.querySelector('.video-card__stats > .video-card__stats--text');
+            if (durationEl) durationEl.textContent = '点击跳转~';
+
+            // 把一些无用的东西隐藏起来
+            [
+                '.video-card__info--author',
+                '.video-card__creator-badge',
+                '.video-card__info--date',
+            ].forEach(sel => {
+                card.querySelectorAll(sel).forEach(el => { el.style.display = 'none'; });
+            });
+        }
+
+        // 替换图片
+        const computedStyle = window.getComputedStyle(img);
+        const width  = img.width  || computedStyle.width;
+        const height = img.height || computedStyle.height;
+
+        const link = document.createElement('a');
+        link.href  = AD_URL;
+        // 默认在当前标签页跳转
+        link.title = AD_TITLE;
+        link.style.cssText = `
+            display: inline-block;
+            cursor: pointer;
+            position: relative;
+        `;
+
+        // 创建广告图片
+        const adImg = document.createElement('img');
+        // 复制所有原始属性
+        Array.from(img.attributes).forEach(attr => {
+            adImg.setAttribute(attr.name, attr.value);
+        });
+
+        adImg.src   = AD_SRC;
+        adImg.alt   = AD_ALT;
+        adImg.title = AD_TITLE;
+        adImg.dataset.adInjected = 'true';
+        adImg.style.cssText = img.style.cssText; // 继承行内样式
+
+        // 悬停时显示广告 让uBlock Origin更容易拦截（兑
+        const badge = document.createElement('span');
+        badge.textContent = '广告';
+        badge.style.cssText = `
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: rgba(0,0,0,0.55);
+            color: #fff;
+            font-size: 10px;
+            line-height: 1;
+            padding: 2px 5px;
+            border-radius: 3px;
+            pointer-events: none;
+            z-index: 9999;
+            font-family: sans-serif;
+        `;
+
+        link.appendChild(adImg);
+        link.appendChild(badge);
+
+        // 用 link 替换原 img
+        img.parentNode.replaceChild(link, img);
+    }
+
+
+    function scanAndInject() {
+        document.querySelectorAll(SELECTOR).forEach(img => {
+            injectAd(img);
+        });
+    }
+
+    // 初始扫描
+    scanAndInject();
+
+    // lazy加载
+    const observer = new MutationObserver(mutations => {
+        let needScan = false;
+        for (const mutation of mutations) {
+            if (mutation.addedNodes.length > 0) {
+                needScan = true;
+                break;
+            }
+        }
+        if (needScan) scanAndInject();
+    });
+
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+    });
+
+})();
