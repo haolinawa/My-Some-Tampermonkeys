@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         "加强糯米！"广告修复（Pro Nuomill Ads Fix）
+// @name         "加强糯米！"脚本广告修复（Pro Nuomill Ads Fix）
 // @namespace    https://github.com/haolinawa
-// @version      1.0
-// @description  你说得对，这是"加强糯米！"中的DLC内容 修复了添加脚本后无法显示本站广告内容 本脚本由豆沙包AI生成，请仔细辨别。
+// @version      1.1
+// @description  你说得对，这是"加强糯米！"脚本中的DLC内容 修复了添加脚本后无法显示本站广告内容 本脚本由豆沙包AI生成，请仔细辨别。
 // @author       haolinAWA
 // @match        https://www.nuomill.com/*
 // @match        https://nuomill.com/*
