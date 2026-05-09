@@ -11,6 +11,7 @@
 // @grant        none
 // @run-at       document-start
 // @license      MIT
+// @icon         https://raw.githubusercontent.com/haolinawa/My-Some-Tampermonkeys/refs/heads/main/imgs/572db6df9fff53b63e5c986280982742_720.jpg
 // ==/UserScript==
 
 (function () {
